@@ -58,7 +58,7 @@ To extract the secrets, use the following code snippet. Make sure to replace `ca
 
 :::note
 
-The following is meant as a suggested script for you to build on. Be sure to adapt the following script to your specific configuration. For example, if you are using an external Postgresql, or if you are using an OIDC other than Kecyloak, or if you are creating secrets manually, change the script accordingly. Also remember that if you are using Keycloak, you also need to extract all secrets that were generated for Keycloak.
+The following is meant as a suggested script for you to build on. Be sure to adapt the following script to your specific configuration. For example, if you are using an external PostgreSQL, using an OIDC other than Keycloak, or creating secrets manually, change the script accordingly. If you are using Keycloak, extract all secrets generated for Keycloak.
 
 :::
 
