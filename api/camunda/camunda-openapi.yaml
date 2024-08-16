@@ -644,6 +644,10 @@ components:
           type: string
         bpmnDefinitionId:
           type: string
+        priority:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/PriorityValueFilter"
     UserTaskItem:
       type: object
       properties:
@@ -701,6 +705,12 @@ components:
           type: object
           additionalProperties:
             type: string
+        priority:
+          type: integer
+          description: The priority of a User Task. The higher the value the higher the priority.
+          minimum: 0
+          maximum: 100
+          default: 50
     ProcessInstanceSearchQueryRequest:
       allOf:
         - $ref: "#/components/schemas/SearchQueryRequest"
@@ -946,6 +956,7 @@ components:
         * `candidateUsers` - reset by providing an empty list
         * `dueDate` - reset by providing an empty String
         * `followUpDate` - reset by providing an empty String
+        * `priority` - minimum 0, maximum 100, default 50
 
         Providing any of those attributes with a `null` value or omitting it preserves
         the persisted attribute's value.
@@ -977,6 +988,13 @@ components:
           description: The list of candidate groups of the task. Reset by providing an empty list.
           items:
             type: string
+          nullable: true
+        priority:
+          type: integer
+          description: The priority of the task.
+          minimum: 0
+          default: 50
+          maximum: 100
           nullable: true
     JobActivationRequest:
       type: object
@@ -1251,6 +1269,29 @@ components:
           type: object
         lte:
           type: object
+    PriorityValueFilter:
+      type: object
+      properties:
+        eq:
+          type: integer
+          minimum: 0
+          maximum: 100
+        gt:
+          type: integer
+          minimum: 0
+          maximum: 100
+        gte:
+          type: integer
+          minimum: 0
+          maximum: 100
+        lt:
+          type: integer
+          minimum: 0
+          maximum: 100
+        lte:
+          type: integer
+          minimum: 0
+          maximum: 100
   securitySchemes:
     bearerAuth:
       type: http
