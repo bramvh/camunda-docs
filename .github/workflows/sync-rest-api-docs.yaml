@@ -1,0 +1,51 @@
+name: Sync Camunda REST API
+
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 16 * * 4" # Runs every Thursday at 4 PM UTC
+  workflow_dispatch:
+
+jobs:
+  sync-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Camunda docs repository
+        uses: actions/checkout@v3
+        with:
+          repository: camunda/camunda-docs
+
+      - name: Checkout Camunda repository
+        uses: actions/checkout@v3
+        with:
+          repository: camunda/camunda
+          path: camunda-repo
+
+      - name: Sync documentation
+        run: |
+          git checkout -b camunda-rest-api-documentation-update
+          cp camunda-repo/zeebe/gateway-protocol/src/main/proto/rest-api.yaml api/camunda/camunda-openapi.yaml
+          rm -rf camunda-repo/
+          npm i
+          npm run api:generate:camunda
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git status
+          git commit -am "docs: updates camunda rest api documentation"
+          git status
+          git push --set-upstream origin camunda-rest-api-documentation-update
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "Update camunda REST API"
+          body: "This PR updates the camunda REST API"
+          branch: "camunda-rest-api-documentation-update"
+          base: "main"
